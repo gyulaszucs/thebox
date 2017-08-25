@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+           
+    </head>
+    <body>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        <script>
+            $( document ).ready(function() {
+                console.log( "ready!" );
+            });
+            $( "#openButton" ).click(function() {
+                    alert("ok");
+                  });
+            function Open(i){
+                $.get( "http://pibox.sn.hu/rest/opendoor.php?p="+i, function( data ) {
+                    a = data;
+                    alert( "Load was performed." );
+              });
+            }
+            var a;
+            function GetStates(){
+                $.get( "http://pibox.sn.hu/rest/getdoorstate.php").always( function( data ) {
+		    var s = data.responseText.split(",");
+                    console.log(s);
+              });
+            }
+        </script>
+        <button id="openButton">Open</button>
+        <span id="info"></span>
+    </body>
+</html>

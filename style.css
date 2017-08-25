@@ -1,0 +1,172 @@
+body{
+
+background-color: #117CC5;
+}
+
+#wrapper{
+
+width:100%;
+
+
+}
+#pi_form{
+	width:660px;
+	height: 50px;
+	margin: 30px auto;
+
+}
+
+#pi_form input[type="text"]{
+
+	width: 100px;
+	height: 150px;
+	font-size: 130px;
+	padding-left: 11px;
+
+}
+
+#pi_form input[type="submit"]{
+
+	width: 320px;
+	height: 85px;
+	background-color: white;
+	color:black;
+	font-size: 64px;
+	margin-top: 20px;
+	margin-right: -4px;
+
+}
+
+#pi_form input[type="reset"]{
+
+	width: 320px;
+	height: 85px;
+	background-color: white;
+	color:black;
+	font-size: 64px;
+	margin-top: 20px;
+
+}
+
+#message{
+	
+width:100%;
+margin: 230px auto;
+color: white;
+font-size: 80px;
+text-align: center;
+font-family: sans-serif;
+
+}
+#thebox{
+
+	width: 300px;
+	height: 420px;
+	background: white;
+	float:right;
+	margin:20px 50px;
+}
+#thebox2{
+
+	width: 300px;
+	height: 420px;
+	background: white;
+	float:right;
+	margin:20px 50px;
+}
+.row2{
+height: 400px;
+width:90px;
+margin:8px 0px 8px 6px;
+float: left;
+
+}
+.shelf{
+
+	background: #007CC3;
+	width: 88px;
+	height: 48px;
+	float:left;
+	margin:4px 0;
+	color:white;
+	font-size: 30px;
+	font-family: sans-serif;
+	text-align: center;
+	border: 1px solid #007CC3;
+
+	
+}
+.shelf p{
+	margin-top: 9px;
+}
+#rpi3{
+	height:106px;
+	background: #007CC3;
+	width: 88px;
+	
+	float:left;
+	margin:4px 0;
+	color:white;
+	font-size: 40px;
+	font-family: sans-serif;
+	text-align: center;
+	border: 1px solid #007CC3;
+
+}
+@-webkit-keyframes demo {
+    0% {
+        background-color: white;
+        color: #007CC3;
+        opacity:1;
+    }
+    50% {
+        background-color: #007CC3;
+        color: white;
+    }
+    100% {
+        background-color: white;
+        color: #007CC3;
+    }
+}
+    
+
+.open{
+
+	-webkit-animation-name: demo;
+    -webkit-animation-duration: 2000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-in-out;
+
+	/*background: white;*/
+	color: #007CC3;
+
+}
+#info_message{
+
+	width: 40%;
+	float: left;
+	margin-top:50px;
+color: white;
+font-size: 36px;
+text-align: center;
+font-family: sans-serif;
+margin-left:16px;
+}
+
+.admin_button{
+
+	width:136px;
+	height: 63px;
+	background-color: #007CC3;
+	color:white;
+	border:6px solid white;
+	float:left;
+	margin: 12px;
+
+}
+.admin_button p{
+	font-family: sans-serif;
+	text-align: center;
+	font-size: 30px;
+	margin-top: 13px;
+}
