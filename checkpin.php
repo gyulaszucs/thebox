@@ -7,6 +7,7 @@ class returndata
     public $stockcounter;
     public $renteditmname;
     public $renteditmpath;
+    public $itempinstatus;
 
 }
 
@@ -39,11 +40,11 @@ function deleteRequest($url,$data){
   curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
   curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
   $response = curl_exec($curl);
-  print_r($response);
+
 }
 
 function checkpin($pin) {
-    $url = "http://thebox.sn.hu/OData.svc/Root/Sites/Store/PIN%20Collector%28'".$pin."'%29?\$expand=VMRequestedItems&\$select=Name,VMItemPINCounter,VMRequestedItems/Index,VMRequestedItems/VMItemCount,VMRequestedItems/Path,VMRequestedItems/Name&metadata=no";
+    $url = "http://thebox.sn.hu/OData.svc/Root/Sites/Store/PIN%20Collector%28'".$pin."'%29?\$expand=VMRequestedItems&\$select=Name,VMItemPINCounter,VMPINStatus,VMRequestedItems/Index,VMRequestedItems/VMItemCount,VMRequestedItems/Path,VMRequestedItems/Name&metadata=no";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
@@ -67,11 +68,13 @@ function checkpin($pin) {
 
 
             $itempincounter=$myjson->d->VMItemPINCounter;
-            $array = [$shelfnumber,$itempincounter];
+            $itempinstatus=$myjson->d->VMPINStatus;
+         //   $array = [$shelfnumber,$itempincounter];
 
             $rdata = new returndata;
             $rdata->shelfnumber = $shelfnumber;
             $rdata->counter = $itempincounter;
+            $rdata->status = $itempinstatus;
             $rdata->stockcounter = $stockcounter;
             $rdata->renteditmname = $renteditmname;
             $rdata->renteditmpath = $renteditmpath;
@@ -118,50 +121,57 @@ if(isset($_POST["pincode"])){
 
             default:
 
-          //   print_r($serverresult);
+    if ($serverresult->status[0] == "Active" || $serverresult->status[0] == "Rented") {
 
                 if ($serverresult ->counter === 0 ) {
                     //Első kivétel
-               
+              
+                          $url =  "http://thebox.sn.hu/OData.svc/Root/Sites/Store/PIN%20Collector('".$mypin."')";
+                          $data = json_encode(array(
+                              "VMItemPINCounter"  => intval($serverresult->counter)+1,
+                              "VMPINStatus" => "Rented"
+                             ));
 
-                $url =  "http://thebox.sn.hu/OData.svc/Root/Sites/Store/PIN%20Collector('".$mypin."')";
-                $data = json_encode(array(
-                    "VMItemPINCounter"  => intval($serverresult->counter)+1,
-                    "VMPINStatus" => "Rented"
-                   ));
+                              $info_message = "Please open shelf number: ".$shelfnumber."</br>";
+                            $taki3= "";
+                            $vmi = "";
 
-                    $info_message = "Please open shelf number: ".$shelfnumber."</br>";
-                  $taki3= "";
-                  $vmi = "";
+                           patchRequest($url,$data);
 
-                 patchRequest($url,$data);
+                      }else{
 
-                }else{
+                          $info_message = "Please open and return item to shelf number: ".$shelfnumber."</br> ";
+                            $taki3= "";
+                            $vmi = "";
+                        //   $url = "http://thebox.sn.hu/OData.svc/Root/Sites/Store/Vending%20Store/Rental%20Items/('XBox')".
+                            $tet = "/".$serverresult->renteditmname;
+                            $path = explode($tet, $serverresult->renteditmpath);
+                             $pinurl =  "http://thebox.sn.hu/OData.svc/Root/Sites/Store/PIN%20Collector('".$mypin."')";
+                              $url = "http://thebox.sn.hu/OData.svc/Root/Sites/Store/Vending%20Store/Rental%20Items/('".$serverresult->renteditmname."')";
+                        //  echo $url;
 
-                $info_message = "Please open shelf number: ".$shelfnumber."</br>";
-                  $taki3= "";
-                  $vmi = "";
-              //   $url = "http://thebox.sn.hu/OData.svc/Root/Sites/Store/Vending%20Store/Rental%20Items/('XBox')".
-                  $tet = "/".$serverresult->renteditmname;
-                  $path = explode($tet, $serverresult->renteditmpath);
-                   $pinurl =  "http://thebox.sn.hu/OData.svc/Root/Sites/Store/PIN%20Collector('".$mypin."')";
-                    $url = "http://thebox.sn.hu/OData.svc/Root/Sites/Store/Vending%20Store/Rental%20Items/('".$serverresult->renteditmname."')";
-              //  echo $url;
+                           $data = json_encode(array(
+                              "VMItemCount"  => 1
+                             ));
 
-                 $data = json_encode(array(
-                    "VMItemCount"  => 1
-                   ));
+                            $pindata = json_encode(array(
+                              "VMItemPINCounter"   => 0,
+                              "VMPINStatus" => "Dissolved"
+                             ));
 
-                  $pindata = json_encode(array(
-                    "VMItemPINCounter"   => 0,
-                    "VMPINStatus" => "Dissolved"
-                   ));
-
-                patchRequest($url,$data);
-                deleteRequest($pinurl,$pindata);
-                }
+                              patchRequest($url,$data);
+                              deleteRequest($pinurl,$pindata);
+                      }
                                                                                      
-                  
+                 }else{
+
+                 $message = "Not existing PIN! :( </br>";
+                 $shelfnumber= 666;
+                 $taki= "";
+
+
+                 }
+
         }    
     }
     
